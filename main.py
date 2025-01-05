@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_restful import Api, Resource, reqparse
-from db import create_task, get_all_tasks, task_complete
+from db import create_task, get_all_tasks, task_complete, task_delete
 
 app = Flask(__name__)
 api = Api(app)
@@ -33,10 +33,17 @@ class TaskManager(Resource):
         task_complete(task_id, params['complete'])
         return {'message': 'Задачу виконано'}
 
-    def delete(self):
-        pass
+    def delete(self, task_id):
+        task_delete(task_id)
+        return {'message': 'Задачу видалено'}
+
+
+class Test(Resource):
+    def get(self):
+        return {'message': 'Test'}
 
 api.add_resource(TaskManager, '/api/v1/tasks', '/api/v1/tasks/<int:task_id>')
+api.add_resource(Test, '/api/v1/test')
 
 if __name__ == '__main__':
     app.run(debug=True)
